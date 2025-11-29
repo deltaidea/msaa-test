@@ -6,12 +6,12 @@ class AccessibleInfo
 public:
     std::string name;
     std::string val;
-    std::string description;
     std::string role;
     std::string state;
     BoundingBox box;
 
-    AccessibleInfo() : name(""), val(""), description(""), role(""), state(""), box() {};
+    AccessibleInfo() : name(""), val(""), role(""), state(""), box() {};
+    AccessibleInfo(IAccessible* pAccessible);
     std::string ToString() const;
 
     static std::string SerializeAccessibleString(BSTR bstr);

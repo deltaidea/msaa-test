@@ -8,14 +8,52 @@
 #include "AccessibleInfo.h"
 #include "BoundingBox.h"
 
+AccessibleInfo::AccessibleInfo(IAccessible* pAccessible)
+{
+    if (!pAccessible) return;
+
+    VARIANT varChild{};
+    varChild.vt = VT_I4;
+    varChild.lVal = CHILDID_SELF;
+
+    BSTR bstrName = nullptr;
+    if (SUCCEEDED(pAccessible->get_accName(varChild, &bstrName)))
+    {
+        name = AccessibleInfo::SerializeAccessibleString(bstrName);
+        SysFreeString(bstrName);
+    }
+    if (name.size() == 0) {
+        name = "<unknown>";
+    }
+
+	BSTR bstrValue = nullptr;
+    if (SUCCEEDED(pAccessible->get_accValue(varChild, &bstrValue)))
+    {
+        val = AccessibleInfo::SerializeAccessibleString(bstrValue);
+        SysFreeString(bstrValue);
+	}
+    if (val.size() == 0) {
+		val = "<unknown>";
+    }
+
+    VARIANT varRole{};
+    if (SUCCEEDED(pAccessible->get_accRole(varChild, &varRole)))
+    {
+        role = AccessibleInfo::SerializeRole(varRole);
+    }
+
+    VARIANT varState{};
+    if (SUCCEEDED(pAccessible->get_accState(varChild, &varState)))
+    {
+        state = AccessibleInfo::SerializeState(varState);
+    }
+
+    box = BoundingBox(pAccessible);
+}
+
 std::string AccessibleInfo::ToString() const
 {
-    return "Name: " + std::string(name.begin(), name.end()) + " | " +
-        "Value: " + std::string(val.begin(), val.end()) + " | " +
-        "Description: " + std::string(description.begin(), description.end()) + " | " +
-        "Role: " + std::string(role.begin(), role.end()) + " | " +
-        "State: " + std::string(state.begin(), state.end()) + " | " +
-        "Bounding Box: " + box.ToString();
+    return role + ": " + name + " - " + val + " | " + "State: " + state + " | " + "Bounding Box: " + box.ToString();
 }
 
 std::string AccessibleInfo::SerializeAccessibleString(BSTR bstr)
