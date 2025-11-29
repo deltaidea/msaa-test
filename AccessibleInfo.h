@@ -13,6 +13,7 @@ public:
     AccessibleInfo() : name(""), val(""), role(""), state(""), box() {};
     AccessibleInfo(IAccessible* pAccessible);
     std::string ToString() const;
+	bool isOffscreen() const;
 
     static std::string SerializeAccessibleString(BSTR bstr);
     static std::string SerializeRole(VARIANT varRole);

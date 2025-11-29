@@ -86,7 +86,8 @@ void InspectAccessibleTree()
         for (IAccessible* child : children)
         {
             AccessibleInfo childInfo = AccessibleInfo(child);
-            if (cursorPoint.x >= childInfo.box.left &&
+			if (!childInfo.isOffscreen() &&
+                cursorPoint.x >= childInfo.box.left &&
                 cursorPoint.x <= childInfo.box.left + childInfo.box.width &&
                 cursorPoint.y >= childInfo.box.top &&
                 cursorPoint.y <= childInfo.box.top + childInfo.box.height)

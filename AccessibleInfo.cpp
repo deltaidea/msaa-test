@@ -56,6 +56,11 @@ std::string AccessibleInfo::ToString() const
     return role + ": " + name + " - " + val + " | " + "State: " + state + " | " + "Bounding Box: " + box.ToString();
 }
 
+bool AccessibleInfo::isOffscreen() const
+{
+	return state.find("Offscreen") != std::string::npos;
+}
+
 std::string AccessibleInfo::SerializeAccessibleString(BSTR bstr)
 {
     if (!bstr) return "";
